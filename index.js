@@ -3,6 +3,7 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 const app = express();
 const http = require('http');
+const Lead = require("./models/message");
 
 const port = process.env.PORT || 3001;
 const server = http.createServer(app);
@@ -12,16 +13,6 @@ const mongourl = "mongodb+srv://sravanin:6CD7lsWENPOFK5XP@bmc.fhum51y.mongodb.ne
 mongoose.connect(mongourl)
   .then(async () => {
     console.log("Connected to MongoDB");
-
-    try {
-      const db = mongoose.connection;
-      const collection = db.collection('users');
-      const result = await collection.insertOne({ key: "value" });
-      console.log("Inserted document with _id:", result.insertedId);
-    } catch (error) {
-      console.error("Error inserting document:", error);
-    }
-
     server.listen(port,'0.0.0.0', () => {
       console.log(`Server running on port ${port}`);
     });
@@ -31,7 +22,7 @@ mongoose.connect(mongourl)
   });
 
 app.use(cors());
-app.use(express.json());
+app.use(express.json()); 
 
 app.get('/', (req, res) => {
   res.send('Hello BMC');
@@ -41,9 +32,24 @@ app.get('/data', (req, res) => {
   res.json({ message: 'Hello from Node.js!' });
 });
 
-app.post('/post-data', (req, res) => {
-  const { data } = req.body;
-  console.log('Received data:',data);
-  res.json({ message: 'Data received successfully' });
+app.use((req, res, next) => {
+  console.log('Middleware: Request body:', req.body);
+  next();
 });
 
+app.post('/post-data', async (req, res) => {
+  try {
+    const data = req.body;
+    console.log('Received data:', data);
+
+    const newLead = new Lead(data);
+    await newLead.save();
+
+    res.json({ message: 'Data received and stored successfully' });
+  } catch (error) {
+    console.error('Error storing data:', error);
+    res.status(500).json({ error: 'Failed to store data' });
+  }
+});
+
+module.exports = app;
