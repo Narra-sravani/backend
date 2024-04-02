@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 const app = express();
 const http = require('http');
 const Lead = require("./models/message");
-
+const leadRoutes= require('./routes');
 const port = process.env.PORT || 3001;
 const server = http.createServer(app);
 
@@ -32,24 +32,34 @@ app.get('/data', (req, res) => {
   res.json({ message: 'Hello from Node.js!' });
 });
 
-app.use((req, res, next) => {
-  console.log('Middleware: Request body:', req.body);
-  next();
-});
+app.use('/lead',leadRoutes);
 
-app.post('/post-data', async (req, res) => {
-  try {
-    const data = req.body;
-    console.log('Received data:', data);
+// app.post('/post-data', async (req, res) => {
+//   try {
+//     const data = req.body;
+//     console.log('Received data:', data);
+//     // Save data to MongoDB or perform any other operations here if needed
 
-    const newLead = new Lead(data);
-    await newLead.save();
+//     // Sending the received data back in the response
+//     res.json(data);
+//   } catch (error) {
+//     console.error('Error handling data:', error);
+//     res.status(500).json({ error: 'Failed to process data' });
+//   }
+// });
+// app.post('/post-data', async (req, res) => {
+//   try {
+//     const data = req.body;
+//     console.log('Received data:', data);
+//     // No database storage, just sending back the received data
+//     res.json(data);
+//   } catch (error) {
+//     console.error('Error handling data:', error);
+//     res.status(500).json({ error: 'Failed to process data' });
+//   }
+// });
 
-    res.json({ message: 'Data received and stored successfully' });
-  } catch (error) {
-    console.error('Error storing data:', error);
-    res.status(500).json({ error: 'Failed to store data' });
-  }
-});
+
+
 
 module.exports = app;
