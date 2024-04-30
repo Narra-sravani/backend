@@ -11,7 +11,7 @@ const leadSchema = new mongoose.Schema({
     },
     latest_recording_url: {
         type: String,
-        required: true
+        
     },
     campaign_id: {
         type: String

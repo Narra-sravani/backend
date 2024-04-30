@@ -15,7 +15,7 @@ async function storeMessage(req, res, next) {
 async function getData(req,res){
   try{
     const leads=await messageService.getLeads();
-    console.log("ledas",leads);
+    // console.log("ledas",leads);
     res.status(200).json(leads);
   }
   catch(error){
