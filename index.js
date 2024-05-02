@@ -34,31 +34,6 @@ app.get('/data', (req, res) => {
 
 app.use('/lead',leadRoutes);
 
-// app.post('/post-data', async (req, res) => {
-//   try {
-//     const data = req.body;
-//     console.log('Received data:', data);
-//     // Save data to MongoDB or perform any other operations here if needed
-
-//     // Sending the received data back in the response
-//     res.json(data);
-//   } catch (error) {
-//     console.error('Error handling data:', error);
-//     res.status(500).json({ error: 'Failed to process data' });
-//   }
-// });
-// app.post('/post-data', async (req, res) => {
-//   try {
-//     const data = req.body;
-//     console.log('Received data:', data);
-//     // No database storage, just sending back the received data
-//     res.json(data);
-//   } catch (error) {
-//     console.error('Error handling data:', error);
-//     res.status(500).json({ error: 'Failed to process data' });
-//   }
-// });
-
 
 
 
