@@ -4,23 +4,23 @@ const mongoose = require('mongoose');
 const leadSchema = new mongoose.Schema({
     call_duration: {
         type: Number,
-        required: true
+        default: null
     },
     call_outcome: {
         type: String,
-        required: true
+        default: null
     },
     call_outcome_id: {
         type: Number,
-        required: true
+        default: null
     },
     caller_id: {
         type: String,
-        required: true
+        default: null
     },
     recording_url: {
         type: String,
-        required: true
+        default: null
     },
     question_answers: {
         type: Array,
@@ -28,27 +28,27 @@ const leadSchema = new mongoose.Schema({
     },
     call_reference_id: {
         type: String,
-        required: true
+        default: null
     },
     status: {
         type: String,
-        required: true
+        default: null
     },
     voice_player_mission_id: {
         type: Number,
-        required: true
+        default: null
     },
     called_at: {
-        type: Date,
-        required: true
+        type: String,
+        default: null
     },
     vm_name: {
         type: String,
-        required: true
+        default: null
     },
     call_end_time: {
-        type: Date,
-        required: true
+        type: String,
+        default: null
     },
     billable_call_duration: {
         type: Number,
@@ -56,23 +56,23 @@ const leadSchema = new mongoose.Schema({
     },
     vm_reference_id: {
         type: String,
-        required: true
+        default: null
     },
     call_attempt_number: {
         type: String,
-        required: true
+        default: null
     },
     is_final_call_attempt: {
         type: Boolean,
-        required: true
+        default: null
     },
     agent_reference_id: {
         type: String,
-        required: true
+        default: null
     },
     is_connected_call: {
         type: Boolean,
-        required: true
+        default: null
     },
     state_code: {
         type: String,
@@ -84,35 +84,35 @@ const leadSchema = new mongoose.Schema({
     },
     sr_idata_stage: {
         type: Number,
-        required: true
+        default: null
     },
     lead_source_url: {
         type: String,
-        required: true
+        default: null
     },
     "{custom_field_1}": {
         type: String,
-        required: true
+        default: null
     },
     "{custom_field_2}": {
         type: String,
-        required: true
+        default: null
     },
     sr_idata_is_valid: {
         type: Boolean,
-        required: true
+        default: null
     },
     sr_idata_stage_txt: {
         type: String,
-        required: true
+        default: null
     },
     lead_create_datetime: {
-        type: Date,
-        required: true
+        type: String,
+        default: null
     },
     sr_idata_is_duplicate: {
         type: Boolean,
-        required: true
+        default: null
     },
     sr_idata_edge_conditions_list: {
         type: Array,
@@ -127,32 +127,32 @@ const leadSchema = new mongoose.Schema({
         default: []
     },
     lead_created_at: {
-        type: Date,
-        required: true
+        type: String,
+        default: null
     },
     ccc_num_calls: {
         type: Number,
-        required: true
+        default: null
     },
     campaign_id: {
         type: String,
-        required: true
+        default: null
     },
     created_at: {
-        type: Date,
-        required: true
+        type: String,
+        default: null
     },
     lead_id: {
         type: String,
-        required: true
+        default: null
     },
     phone_number: {
         type: String,
-        required: true
+        default: null
     },
     contact_name: {
         type: String,
-        required: true
+        default: null
     },
     lead_responses: {
         type: Object,
