@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 
 const leadSchema = new mongoose.Schema({
     call_duration: {
-        type: Number,
+        type: String,
         default: null
     },
     call_outcome: {
@@ -11,7 +11,7 @@ const leadSchema = new mongoose.Schema({
         default: null
     },
     call_outcome_id: {
-        type: Number,
+        type: String,
         default: null
     },
     caller_id: {
@@ -35,7 +35,7 @@ const leadSchema = new mongoose.Schema({
         default: null
     },
     voice_player_mission_id: {
-        type: Number,
+        type: String,
         default: null
     },
     called_at: {
@@ -51,7 +51,7 @@ const leadSchema = new mongoose.Schema({
         default: null
     },
     billable_call_duration: {
-        type: Number,
+        type: String,
         default: null
     },
     vm_reference_id: {
@@ -83,7 +83,7 @@ const leadSchema = new mongoose.Schema({
         default: []
     },
     sr_idata_stage: {
-        type: Number,
+        type: String,
         default: null
     },
     lead_source_url: {
@@ -131,7 +131,7 @@ const leadSchema = new mongoose.Schema({
         default: null
     },
     ccc_num_calls: {
-        type: Number,
+        type: String,
         default: null
     },
     campaign_id: {
