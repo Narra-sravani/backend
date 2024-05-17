@@ -10,6 +10,10 @@ const leadSchema = new mongoose.Schema({
         type: String,
         default: null
     },
+    Lead_outcome:{
+        type:String,
+        default: null
+    },
     call_outcome_id: {
         type: String,
         default: null
