@@ -11,9 +11,10 @@ const leadSchema = new mongoose.Schema({
         default: null
     },
     lead_outcome:{
-        type:String,
+        type: String,
         default: null
     },
+    
     call_outcome_id: {
         type: String,
         default: null
