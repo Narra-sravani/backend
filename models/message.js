@@ -10,7 +10,7 @@ const leadSchema = new mongoose.Schema({
         type: String,
         default: null
     },
-    Lead_outcome:{
+    lead_outcome:{
         type:String,
         default: null
     },
