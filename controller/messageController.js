@@ -1,30 +1,30 @@
 const messageService = require('../services/messageService');
 const axios = require('axios');
 
+// Mapping object for lead statuses (normalized to uppercase keys)
 const statusMapping = {
   "INTERESTED": "INTERESTED",
   "NOT INTERESTED": "DO NOT DISTRUB",
   "IN - PROGRESS": "IN - PROGRESS",
   "SKIPPED": "SKIPPED",
-  "DO NOT DISTRUB":"DO NOT DISTRUB",
-  "connected but no opportunity": "NOT INTERESTED",
-  "Closing- other city": "SKIPPED",
+  "DO NOT DISTRUB": "DO NOT DISTRUB",
+  "CONNECTED BUT NO OPPORTUNITY": "NOT INTERESTED",
+  "CLOSING- OTHER CITY": "SKIPPED",
   "NOT DIALABLE": "NOT DIALABLE",
   "NOT CONNECTED": "NOT CONNECTED",
-  "rescheduled": "IN - PROGRESS",
-  "Abruptly disconnected and not Receiving": "NOT CONNECTED",
-  "Phone Not Answered": "NOT CONNECTED",
-  "Language Issue": "NOT CONNECTED",
-  "Call Rescheduled": "IN - PROGRESS",
+  "RESCHEDULED": "IN - PROGRESS",
+  "ABRUPTLY DISCONNECTED AND NOT RECEIVING": "NOT CONNECTED",
+  "PHONE NOT ANSWERED": "NOT CONNECTED",
+  "LANGUAGE ISSUE": "NOT CONNECTED",
+  "CALL RESCHEDULED": "IN - PROGRESS",
   "INVALID NUMBER": "NOT DIALABLE",
-  "Invalid Number  Out of Service": "NOT DIALABLE",
-  "Abruptly Told Lead Would Connect Himself If Interested": "DO NOT DISTRUB",
-  "Already Spoken": "NOT INTERESTED",
-  "Technical Issue - Call Not Connected": "NOT CONNECTED",
-  "DNC Client : Don't Call Further": "DO NOT DISTRUB",
-  "Incorrect Target Lead": "NOT CONNECTED",
-  "Phone Busy": "NOT CONNECTED",
-
+  "INVALID NUMBER  OUT OF SERVICE": "NOT DIALABLE",
+  "ABRUPTLY TOLD LEAD WOULD CONNECT HIMSELF IF INTERESTED": "DO NOT DISTRUB",
+  "ALREADY SPOKEN": "NOT INTERESTED",
+  "TECHNICAL ISSUE - CALL NOT CONNECTED": "NOT CONNECTED",
+  "DNC CLIENT : DON'T CALL FURTHER": "DO NOT DISTRUB",
+  "INCORRECT TARGET LEAD": "NOT CONNECTED",
+  "PHONE BUSY": "NOT CONNECTED"
 };
 
 async function storeMessage(req, res, next) {
@@ -45,9 +45,11 @@ async function storeMessage(req, res, next) {
 
 async function autoUpdateForNewLead(leadData) {
   try {
+    // Normalize the call outcome to match mapping keys (case insensitive)
     const normalizedCallOutcome = leadData.call_outcome.toUpperCase().replace(/\s+/g, ' ').trim();
     
-    const mappedStatus = statusMapping[normalizedCallOutcome];
+    // Find the mapped status using the normalized key
+    const mappedStatus = Object.keys(statusMapping).find(key => key.toUpperCase() === normalizedCallOutcome);
 
     if (!mappedStatus) {
       console.log('Status not in the mapped list, skipping update.');
@@ -61,7 +63,7 @@ async function autoUpdateForNewLead(leadData) {
         SquadstackCallRecording: leadData.recording_url,
         AdditionalNotes: leadData.question_answers.find(answer => answer.question === "additional_notes")?.answer || "",
         EventTimeline: leadData.question_answers.find(answer => answer.question === "event_timeline")?.answer || "",
-        SquadStackStatus: mappedStatus,
+        SquadStackStatus: statusMapping[mappedStatus], // Use the mapped status from statusMapping
         cities: leadData.question_answers.find(answer => answer.question === "other_city")?.answer || ""
       },
       actions: [{ type: "SYSTEM_NOTE" }]
