@@ -56,11 +56,16 @@ async function autoUpdateForNewLead(leadData) {
     const eventTimeline = leadData.question_answers.find(answer => answer.question === "event_timeline")?.answer || "";
     let urgent = "Low";
     const lowerCaseTimeline = eventTimeline.toLowerCase();
-    if (lowerCaseTimeline.includes('tomorrow') || lowerCaseTimeline.includes('this week') || lowerCaseTimeline.includes('next week')) {
-      urgent = "High";
-    } else if (lowerCaseTimeline.includes('this month') || lowerCaseTimeline.includes('next month')) {
-      urgent = "Medium";
-    } else if(lowerCaseTimeline.includes('not planned yet'))
+    if(normalizedCallOutcome === "INTERESTED"){
+      if (lowerCaseTimeline.includes('tomorrow') || lowerCaseTimeline.includes('this week') || lowerCaseTimeline.includes('next week')) {
+        urgent = "High";
+      } else if (lowerCaseTimeline.includes('this month') || lowerCaseTimeline.includes('next month')) {
+        urgent = "Medium";
+      } else if(lowerCaseTimeline.includes('not planned yet')){
+        urgent= "Low";
+      }
+    }
+  
 
     console.log(`Urgency for lead ${leadData.lead_id}: ${urgent}`);
 
