@@ -45,16 +45,28 @@ async function storeMessage(req, res, next) {
 
 async function autoUpdateForNewLead(leadData) {
   try {
-    // Normalize the call outcome to match mapping keys (case insensitive)
     const normalizedCallOutcome = leadData.call_outcome.toUpperCase().replace(/\s+/g, ' ').trim();
-    
-    // Find the mapped status using the normalized key
+
     const mappedStatus = Object.keys(statusMapping).find(key => key.toUpperCase() === normalizedCallOutcome);
 
     if (!mappedStatus) {
       console.log('Status not in the mapped list, skipping update.');
       return;
     }
+    const eventTimeline = leadData.question_answers.find(answer => answer.question === "event_timeline")?.answer || "";
+    let urgent = "Low";
+    const lowerCaseTimeline = eventTimeline.toLowerCase();
+    if (lowerCaseTimeline.includes('tomorrow') || lowerCaseTimeline.includes('this week') || lowerCaseTimeline.includes('next week')) {
+      urgent = "High";
+    } else if (lowerCaseTimeline.includes('this month') || lowerCaseTimeline.includes('next month')) {
+      urgent = "Medium";
+    } else if(lowerCaseTimeline.includes('not planned yet'))
+
+    console.log(`Urgency for lead ${leadData.lead_id}: ${urgent}`);
+
+    leadData.urgent = urgent;
+
+
 
     const sampleObject = {
       fields: {
@@ -64,7 +76,8 @@ async function autoUpdateForNewLead(leadData) {
         AdditionalNotes: leadData.question_answers.find(answer => answer.question === "additional_notes")?.answer || "",
         EventTimeline: leadData.question_answers.find(answer => answer.question === "event_timeline")?.answer || "",
         SquadStackStatus: statusMapping[mappedStatus], // Use the mapped status from statusMapping
-        cities: leadData.question_answers.find(answer => answer.question === "other_city")?.answer || ""
+        cities: leadData.question_answers.find(answer => answer.question === "other_city")?.answer || "",
+        Urgent: urgent
       },
       actions: [{ type: "SYSTEM_NOTE" }]
     };
@@ -75,7 +88,7 @@ async function autoUpdateForNewLead(leadData) {
     };
 
     const teleCRMResponse = await axios.post('https://api.telecrm.in/enterprise/65a4ef495caf37c09f8c5772/autoupdatelead', sampleObject, { headers });
-    
+
     if (teleCRMResponse.status === 200) {
       console.log('Lead updated successfully in TeleCRM');
     } else {
