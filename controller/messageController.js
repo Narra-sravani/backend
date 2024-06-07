@@ -27,6 +27,23 @@ const statusMapping = {
   "PHONE BUSY": "NOT CONNECTED"
 };
 
+// async function storeMessage(req, res, next) {
+//   console.log("Request body:", req.body);
+//   try {
+//     const message = req.body;
+    
+//     const storedMessage = await messageService.storeMessage(message);
+
+//     await autoUpdateForNewLead(message);
+
+//     res.json({ message: 'Message stored successfully', storedMessage });
+//   } catch (error) {
+//     console.error('Error storing message:', error);
+//     res.status(500).json({ error: 'Failed to store message' });
+//   }
+// }
+
+
 async function storeMessage(req, res, next) {
   console.log("Request body:", req.body);
   try {
@@ -49,10 +66,10 @@ async function autoUpdateForNewLead(leadData) {
 
     // const mappedStatus = Object.keys(statusMapping).find(key => key.toUpperCase() === normalizedCallOutcome);
 
-    if (!mappedStatus) {
-      console.log('Status not in the mapped list, skipping update.');
-      return;
-    }
+    // if (!mappedStatus) {
+    //   console.log('Status not in the mapped list, skipping update.');
+    //   return;
+    // }
     // const eventTimeline = leadData.question_answers.find(answer => answer.question === "event_timeline")?.answer || "";
     // let urgent = "Low";
     // const lowerCaseTimeline = eventTimeline.toLowerCase();
