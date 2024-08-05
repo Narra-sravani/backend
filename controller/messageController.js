@@ -50,7 +50,7 @@ async function storeMessage(req, res, next) {
     
     const storedMessage = await messageService.storeMessage(message);
 
-    await autoUpdateForNewLead(message);
+    // await autoUpdateForNewLead(message);
 
     res.json({ message: 'Message stored successfully', storedMessage });
   } catch (error) {
@@ -59,70 +59,70 @@ async function storeMessage(req, res, next) {
   }
 }
 
-async function autoUpdateForNewLead(leadData) {
-  try {
-    const normalizedCallOutcome = leadData.call_outcome.toUpperCase().replace(/\s+/g, ' ').trim();
+// async function autoUpdateForNewLead(leadData) {
+//   try {
+//     const normalizedCallOutcome = leadData.call_outcome.toUpperCase().replace(/\s+/g, ' ').trim();
    
 
-    const mappedStatus = Object.keys(statusMapping).find(key => key.toUpperCase() === normalizedCallOutcome);
+//     const mappedStatus = Object.keys(statusMapping).find(key => key.toUpperCase() === normalizedCallOutcome);
 
-    if (!mappedStatus) {
-      console.log('Status not in the mapped list, skipping update.');
-      return;
-    }
-    const eventTimeline = leadData.question_answers.find(answer => answer.question === "event_timeline")?.answer || "";
-    let urgent = "Low";
-    const lowerCaseTimeline = eventTimeline.toLowerCase();
-    if(normalizedCallOutcome === "INTERESTED"){
-      if (lowerCaseTimeline.includes('tomorrow') || lowerCaseTimeline.includes('this week') || lowerCaseTimeline.includes('next week')) {
-        urgent = "High";
-      } else if (lowerCaseTimeline.includes('this month') || lowerCaseTimeline.includes('next month')) {
-        urgent = "Medium";
-      } else if(lowerCaseTimeline.includes('not planned yet')){
-        urgent= "Low";
-      }
-    }
+//     if (!mappedStatus) {
+//       console.log('Status not in the mapped list, skipping update.');
+//       return;
+//     }
+//     const eventTimeline = leadData.question_answers.find(answer => answer.question === "event_timeline")?.answer || "";
+//     let urgent = "Low";
+//     const lowerCaseTimeline = eventTimeline.toLowerCase();
+//     if(normalizedCallOutcome === "INTERESTED"){
+//       if (lowerCaseTimeline.includes('tomorrow') || lowerCaseTimeline.includes('this week') || lowerCaseTimeline.includes('next week')) {
+//         urgent = "High";
+//       } else if (lowerCaseTimeline.includes('this month') || lowerCaseTimeline.includes('next month')) {
+//         urgent = "Medium";
+//       } else if(lowerCaseTimeline.includes('not planned yet')){
+//         urgent= "Low";
+//       }
+//     }
   
 
-    console.log(`Urgency for lead ${leadData.lead_id}: ${urgent}`);
+//     console.log(`Urgency for lead ${leadData.lead_id}: ${urgent}`);
 
-    leadData.urgent = urgent;
+//     leadData.urgent = urgent;
 
 
 
-    const sampleObject = {
-      fields: {
-        name: leadData.contact_name,
-        phone: leadData.phone_number,
-        SquadstackCallRecording: leadData.recording_url,
-        AdditionalNotes: leadData.question_answers.find(answer => answer.question === "additional_notes")?.answer || "",
-        EventTimeline: leadData.question_answers.find(answer => answer.question === "event_timeline")?.answer || "",
-        SquadStackStatus: statusMapping[mappedStatus], // Use the mapped status from statusMapping
-        cities: leadData.question_answers.find(answer => answer.question === "other_city")?.answer || "",
-        Urgent: urgent
-      },
-      actions: [{ type: "SYSTEM_NOTE" }]
-    };
+//     const sampleObject = {
+//       fields: {
+//         name: leadData.contact_name,
+//         phone: leadData.phone_number,
+//         SquadstackCallRecording: leadData.recording_url,
+//         AdditionalNotes: leadData.question_answers.find(answer => answer.question === "additional_notes")?.answer || "",
+//         EventTimeline: leadData.question_answers.find(answer => answer.question === "event_timeline")?.answer || "",
+//         SquadStackStatus: statusMapping[mappedStatus], // Use the mapped status from statusMapping
+//         cities: leadData.question_answers.find(answer => answer.question === "other_city")?.answer || "",
+//         Urgent: urgent
+//       },
+//       actions: [{ type: "SYSTEM_NOTE" }]
+//     };
 
-    const headers = {
-      'Content-Type': 'application/json',
-      'Authorization': 'Bearer 44e03335-c176-4929-8bad-43d924f118891710764190404:9a3e0bff-d65e-4f8b-8096-42d86b3b8036'
-    };
+//     const headers = {
+//       'Content-Type': 'application/json',
+//       'Authorization': 'Bearer 44e03335-c176-4929-8bad-43d924f118891710764190404:9a3e0bff-d65e-4f8b-8096-42d86b3b8036'
+//     };
 
-    const teleCRMResponse = await axios.post('https://api.telecrm.in/enterprise/65a4ef495caf37c09f8c5772/autoupdatelead', sampleObject, { headers });
+//     const teleCRMResponse = await axios.post('https://api.telecrm.in/enterprise/65a4ef495caf37c09f8c5772/autoupdatelead', sampleObject, { headers });
 
-    if (teleCRMResponse.status === 200) {
-      console.log('Lead updated successfully in TeleCRM');
-    } else {
-      throw new Error(`Failed to update lead in TeleCRM: ${teleCRMResponse.statusText}`);
-    }
+//     if (teleCRMResponse.status === 200) {
+//       console.log('Lead updated successfully in TeleCRM');
+//     } else {
+//       throw new Error(`Failed to update lead in TeleCRM: ${teleCRMResponse.statusText}`);
+//     }
 
    
-  } catch (error) {
-    console.error("Error updating lead in TeleCRM:", error);
-    throw new Error(`Error updating lead in TeleCRM: ${error.message}`);
-  }
-}
+//   } catch (error) {
+//     console.error("Error updating lead in TeleCRM:", error);
+//     throw new Error(`Error updating lead in TeleCRM: ${error.message}`);
+//   }
+// }
 
 async function getData(req, res) {
   try {
